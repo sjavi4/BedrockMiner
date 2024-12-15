@@ -32,3 +32,4 @@ Currently not supported
 5. Torch above piston checking
 6. Area/Auto breaking?
 7. Parallel task execution
+8. Entity collision check
