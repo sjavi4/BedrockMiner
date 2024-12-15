@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "bedrockminer",
+  "version": "${version}",
+  "name": "BedrockMiner",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/bedrockminer/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "me.autobot.bedrockminer.client.BedrockminerClient"
+    ],
+    "main": [
+      "me.autobot.bedrockminer.Bedrockminer"
+    ]
+  },
+  "mixins": [
+    "bedrockminer.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
