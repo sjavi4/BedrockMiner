@@ -3,7 +3,7 @@ A Fabric mod for Simple Bedrock Breaking. Support 1.21.3
 
 Thanks https://github.com/LXYan2333/Fabric-Bedrock-Miner for the concept of bedrock breaking.
 
-Still glichy, not sure i will fix it all or continue the mod.
+Still glitchy, not sure i will fix it all or continue the mod.
 
 ## Requirement
 - Efficiency V diamond (or netherite) pickaxe
