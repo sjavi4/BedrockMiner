@@ -31,3 +31,4 @@ Currently not supported
 4. Bypass Hack Plugin/Mod (place from air, looking packets, etc)
 5. Torch above piston checking
 6. Area/Auto breaking?
+7. Parallel task execution
