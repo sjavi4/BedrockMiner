@@ -2,7 +2,6 @@ package me.autobot.bedrockminer.mixin;
 
 import me.autobot.bedrockminer.Task;
 import me.autobot.bedrockminer.helper.InventoryHelper;
-import me.autobot.bedrockminer.helper.PlayerLookHelper;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,7 +15,6 @@ public class MixinMultiPlayerGameMode {
     @Inject(at = @At("HEAD"), method = "tick")
     public void onTick(CallbackInfo ci) {
         if (!Task.TASKS.isEmpty()) {
-            PlayerLookHelper.onTick();
             InventoryHelper.cacheInventory();
         }
 
@@ -24,5 +22,4 @@ public class MixinMultiPlayerGameMode {
             t.tick();
         }
     }
-
 }

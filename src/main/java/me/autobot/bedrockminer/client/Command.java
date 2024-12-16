@@ -49,13 +49,37 @@ public class Command {
             }).build();
 
             LiteralCommandNode<FabricClientCommandSource> cleanupDelayNode = literal("cleanupDelay")
-                    .then(argument("delay", IntegerArgumentType.integer(1))
+                    .then(argument("delay", IntegerArgumentType.integer(0))
                             .suggests((context, builder) -> {
-                                builder.suggest(Setting.CLEANUPDELAY);
+                                builder.suggest(Setting.CLEANUP_DELAY);
                                 return builder.buildFuture();
                             })
                             .executes(context -> {
-                                Setting.CLEANUPDELAY = IntegerArgumentType.getInteger(context, "delay");
+                                Setting.CLEANUP_DELAY = IntegerArgumentType.getInteger(context, "delay");
+                                return 1;
+                            }))
+                    .build();
+
+            LiteralCommandNode<FabricClientCommandSource> pistonPlaceDelayNode = literal("pistonPlaceDelay")
+                    .then(argument("delay", IntegerArgumentType.integer(0))
+                            .suggests((context, builder) -> {
+                                builder.suggest(Setting.PISTON_PLACE_DELAY);
+                                return builder.buildFuture();
+                            })
+                            .executes(context -> {
+                                Setting.PISTON_PLACE_DELAY = IntegerArgumentType.getInteger(context, "delay");
+                                return 1;
+                            }))
+                    .build();
+
+            LiteralCommandNode<FabricClientCommandSource> pistonPushDelayNode = literal("pistonPushDelay")
+                    .then(argument("delay", IntegerArgumentType.integer(0))
+                            .suggests((context, builder) -> {
+                                builder.suggest(Setting.PISTON_PUSH_DELAY);
+                                return builder.buildFuture();
+                            })
+                            .executes(context -> {
+                                Setting.PISTON_PUSH_DELAY = IntegerArgumentType.getInteger(context, "delay");
                                 return 1;
                             }))
                     .build();
@@ -85,15 +109,12 @@ public class Command {
                                     })))
                     .build();
 
-
-
-
-
-
             //rootNode.addChild(mineModeNode);
             rootNode.addChild(mineBlockListNode);
             rootNode.addChild(clearTaskNode);
             rootNode.addChild(cleanupDelayNode);
+            rootNode.addChild(pistonPlaceDelayNode);
+            rootNode.addChild(pistonPushDelayNode);
 
         }));
     }

@@ -11,7 +11,6 @@ public class PlayerLookHelper {
     private static boolean modifyPitch = false;
     private static float yaw = 0F;
     private static float pitch = 0F;
-    private static int ticks = 0;
 
     public static float onModifyLookYaw(float yaw) {
         return modifyYaw ? PlayerLookHelper.yaw : yaw;
@@ -67,17 +66,6 @@ public class PlayerLookHelper {
         ClientPacketListener networkHandler = client.getConnection();
         if (networkHandler != null && player != null) {
             networkHandler.send(getLookPacket(player));
-        }
-    }
-
-
-    public static void onTick() {
-        // 自动重置视角
-        if (isModify()){
-            if (ticks++ > 20) {
-                ticks = 0;
-                reset();
-            }
         }
     }
 

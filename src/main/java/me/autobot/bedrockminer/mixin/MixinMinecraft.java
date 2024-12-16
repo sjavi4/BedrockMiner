@@ -4,11 +4,9 @@ import me.autobot.bedrockminer.Setting;
 import me.autobot.bedrockminer.Task;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.multiplayer.chat.ChatListener;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -23,7 +21,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
@@ -40,56 +37,57 @@ public class MixinMinecraft {
     @Nullable
     public HitResult hitResult;
 
-
-    @Shadow @Nullable public MultiPlayerGameMode gameMode;
-
     @Shadow @Final private ChatListener chatListener;
 
-    @Inject(at = @At("HEAD"), method = "startUseItem")
+    @Inject(at = @At("HEAD"), method = "startUseItem", cancellable = true)
     public void onStartUseItem(CallbackInfo ci) {
         // All Use base
         if (level == null || player == null || hitResult == null) {
             return;
         }
+        if (!Task.TASKS.isEmpty()) {
+            ci.cancel();
+            return;
+        }
         switch (hitResult.getType()) {
             case MISS -> areaMode();
-            case BLOCK -> singleMode();
+            case BLOCK -> {
+                if (singleMode()) {
+                    ci.cancel();
+                }
+            }
         }
-        //ci.cancel();
-    }
-
-    @Inject(method = "continueAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    public void onContinueAttack(boolean bl, CallbackInfo ci, BlockHitResult blockHitResult, BlockPos blockPos, Direction direction) {
-        //System.out.println("ContinueAttack");
     }
 
     @Unique
-    private void singleMode() {
+    private boolean singleMode() {
         if (!Setting.ENABLE || Setting.MINEMODE != Setting.Mode.SINGLE) {
-            return;
+            return false;
         }
         if (!player.getMainHandItem().isEmpty() && !(player.getMainHandItem().is(Items.DIAMOND_PICKAXE) || player.getMainHandItem().is(Items.NETHERITE_PICKAXE))) {
-            return;
+            return false;
         }
         BlockHitResult blockHitResult = (BlockHitResult) hitResult;
         if (blockHitResult == null) {
-            return;
+            return false;
         }
         BlockPos pos = blockHitResult.getBlockPos();
         BlockState state = level.getBlockState(pos);
         Block block = state.getBlock();
         if (!Setting.MINEBLOCKS.contains(block)) {
-            return;
+            return false;
         }
         if (!Task.TASKS.isEmpty()) {
-            return;
+            return false;
         }
         if (!Task.TASKS.containsKey(pos)) {
             Task.addTask(pos);
             chatListener.handleSystemMessage(Component.literal("Add Task"), true);
+            return true;
         } else {
             chatListener.handleSystemMessage(Component.literal("Processing Task"), true);
         }
+        return false;
     }
 
     @Unique
