@@ -25,11 +25,11 @@ Optional: Slime blocks
 
 ## Note
 Currently not supported
-1. Sideway bedrock breaking
+1. ~~Sideway bedrock breaking~~
 2. Avoid logging of `Mismatch in destroy block pos:` from ServerPlayerGameMode (Paper server switch it to Debug-logging only)
 3. Hand Reach check / World check
 4. Bypass Hack Plugin/Mod (place from air, looking packets, etc)
-5. Torch above piston checking
+5. ~~Torch above piston checking~~
 6. Area/Auto breaking?
 7. Parallel task execution
 8. Entity collision check
