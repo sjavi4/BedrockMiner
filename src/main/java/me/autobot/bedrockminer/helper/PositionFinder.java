@@ -2,8 +2,6 @@ package me.autobot.bedrockminer.helper;
 
 import com.mojang.datafixers.util.Pair;
 import me.autobot.bedrockminer.mixin.MixinGetterBaseTorchBlock;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -15,23 +13,13 @@ import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
+import static me.autobot.bedrockminer.helper.Consts.*;
+
 public class PositionFinder {
-
-    private static final Minecraft client = Minecraft.getInstance();
-    private static ClientLevel level = client.level;
-
-    public static void init() {
-        level = client.level;
-    }
 
     public static Pair<BlockPos, BlockState> findPistonPos(BlockPos bedrockPos) {
         BlockPos pistonPos = bedrockPos.above();
         Block block = Blocks.PISTON;
-        ItemStack itemStack = InventoryHelper.Type.PISTON.getItem();
-
-        if (itemStack == null) {
-            return null;
-        }
 
         // Above + Facing UP
         // Above + Facing Horizontal
@@ -85,11 +73,6 @@ public class PositionFinder {
      * 2. Block Side<br>
      */
     public static Pair<BlockPos, BlockState> findTorchPos(BlockPos pistonPos, BlockState pistonState) {
-        ItemStack itemStack = InventoryHelper.Type.TORCH.getItem();
-
-        if (itemStack == null) {
-            return null;
-        }
 
         Direction pistonFacing = pistonState.getValue(BlockStateProperties.FACING);
         // piston Y and piston Y + 1
@@ -138,12 +121,6 @@ public class PositionFinder {
         // torch = Piston HORIZONTAL
         // slime = torch below / torch side (except piston pos)
         Block block = Blocks.SLIME_BLOCK;
-        ItemStack itemStack = InventoryHelper.Type.SLIME.getItem();
-
-        if (itemStack == null) {
-            return null;
-        }
-
         Direction pistonFacing = pistonState.getValue(BlockStateProperties.FACING);
         for (Direction d : Direction.Plane.HORIZONTAL) {
             // Skip piston facing

@@ -3,7 +3,7 @@ package me.autobot.bedrockminer.client;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.autobot.bedrockminer.Setting;
-import me.autobot.bedrockminer.Task;
+import me.autobot.bedrockminer.task.Task;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.commands.arguments.blocks.BlockInput;
@@ -27,24 +27,22 @@ public class Command {
 
             dispatcher.getRoot().addChild(rootNode);
 
-//            LiteralCommandNode<FabricClientCommandSource> mineModeNode = literal("mode")
-//                    .then(literal("single").executes(context -> {
-//                        Setting.MINEMODE = Setting.Mode.SINGLE;
-//                        context.getSource().sendFeedback(Component.literal("Set Mode to single"));
-//                        context.getSource().sendFeedback(Component.literal("Destroy by targeting the block and press use with hand"));
-//                        return 1;
-//                    }))
-//                    .then(literal("area").executes(context -> {
-//                        Setting.MINEMODE = Setting.Mode.AREA;
-//                        context.getSource().sendFeedback(Component.literal("Set Mode to area"));
-//                        context.getSource().sendFeedback(Component.literal("Destroy nearby blocks and hold use with hand"));
-//                        return 1;
-//                    }))
-//                    .build();
+            LiteralCommandNode<FabricClientCommandSource> mineModeNode = literal("mode")
+                    .then(literal("single").executes(context -> {
+                        Setting.MINEMODE = Setting.Mode.SINGLE;
+                        context.getSource().sendFeedback(Component.literal("Set Mode to single"));
+                        context.getSource().sendFeedback(Component.literal("Destroy by targeting the block and press use"));
+                        return 1;
+                    }))
+                    .then(literal("area").executes(context -> {
+                        Setting.MINEMODE = Setting.Mode.AREA;
+                        context.getSource().sendFeedback(Component.literal("Set Mode to area"));
+                        context.getSource().sendFeedback(Component.literal("Destroy nearby blocks by pressing use"));
+                        return 1;
+                    }))
+                    .build();
             LiteralCommandNode<FabricClientCommandSource> clearTaskNode = literal("clearTask").executes(context -> {
-                for (Task t : Task.TASKS.values()) {
-                    t.removeTask();
-                }
+                Task.TASKS.clear();
                 return 1;
             }).build();
 
@@ -109,7 +107,20 @@ public class Command {
                                     })))
                     .build();
 
-            //rootNode.addChild(mineModeNode);
+//            LiteralCommandNode<FabricClientCommandSource> areaModeMaxTickNode = literal("areaModeMaxTick")
+//                    .then(argument("max", IntegerArgumentType.integer(1))
+//                            .suggests((context, builder) -> {
+//                                builder.suggest(Setting.AREA_MODE_MAX_TICK);
+//                                return builder.buildFuture();
+//                            })
+//                            .executes(context -> {
+//                                Setting.AREA_MODE_MAX_TICK = IntegerArgumentType.getInteger(context, "max");
+//                                return 1;
+//                            }))
+//                    .build();
+//
+//            rootNode.addChild(areaModeMaxTickNode);
+            rootNode.addChild(mineModeNode);
             rootNode.addChild(mineBlockListNode);
             rootNode.addChild(clearTaskNode);
             rootNode.addChild(cleanupDelayNode);

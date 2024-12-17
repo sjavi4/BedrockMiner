@@ -12,6 +12,7 @@ public class Setting {
     public static int CLEANUP_DELAY = 2;
     public static int PISTON_PLACE_DELAY = 1;
     public static int PISTON_PUSH_DELAY = 3;
+    //public static int AREA_MODE_MAX_TICK = 3;
     public static Set<Block> MINEBLOCKS = new HashSet<>() {{
         add(Blocks.BEDROCK);
         add(Blocks.END_PORTAL_FRAME);

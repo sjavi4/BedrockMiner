@@ -1,10 +1,10 @@
 package me.autobot.bedrockminer.helper;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
+
+import static me.autobot.bedrockminer.helper.Consts.*;
 
 public class PlayerLookHelper {
     private static boolean modifyYaw = false;
@@ -34,15 +34,12 @@ public class PlayerLookHelper {
     }
 
     public static void set(Direction facing) {
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.player;
-        ClientPacketListener networkHandler = client.getConnection();
         float yaw = switch (facing) {
             case SOUTH -> 180F;
             case EAST -> 90F;
             case NORTH -> 0F;
             case WEST -> -90F;
-            default -> player == null ? 0F : player.getViewYRot(1f);
+            default -> player.getViewYRot(1f);
         };
         float pitch = switch (facing) {
             case UP -> 90F;
@@ -50,9 +47,7 @@ public class PlayerLookHelper {
             default -> 0F;
         };
         set(yaw, pitch);
-        if (networkHandler != null && player != null) {
-            networkHandler.send(getLookPacket(player));
-        }
+        connection.send(getLookPacket(localPlayer));
     }
 
     public static void reset() {
@@ -60,16 +55,6 @@ public class PlayerLookHelper {
         yaw = 0F;
         modifyPitch = false;
         pitch = 0F;
-
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.player;
-        ClientPacketListener networkHandler = client.getConnection();
-        if (networkHandler != null && player != null) {
-            networkHandler.send(getLookPacket(player));
-        }
-    }
-
-    public static boolean isModify() {
-        return modifyYaw || modifyPitch;
+        connection.send(getLookPacket(localPlayer));
     }
 }
