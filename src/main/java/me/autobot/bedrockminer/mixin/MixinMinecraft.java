@@ -35,7 +35,8 @@ public class MixinMinecraft {
     @Inject(at = @At("HEAD"), method = "setLevel")
     public void onChangeLevel(ClientLevel clientLevel, ReceivingLevelScreen.Reason reason, CallbackInfo ci) {
         Task.TASKS.clear();
-        Consts.level = clientLevel;
+        itemCacheMap.clear();
+        level = clientLevel;
     }
 
     @Inject(at = @At("HEAD"), method = "startUseItem", cancellable = true)

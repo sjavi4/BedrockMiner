@@ -3,6 +3,8 @@ package me.autobot.bedrockminer.client;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.autobot.bedrockminer.Setting;
+import me.autobot.bedrockminer.helper.Consts;
+import me.autobot.bedrockminer.helper.PlayerLookHelper;
 import me.autobot.bedrockminer.task.Task;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -21,6 +23,7 @@ public class Command {
                     .executes(context -> {
                         final boolean b = Setting.ENABLE = !Setting.ENABLE;
                         context.getSource().sendFeedback(Component.literal("Bedrock Miner is " + (b ? "enabled" : "disabled")));
+                        PlayerLookHelper.reset();
                         return 1;
                     })
                     .build();
@@ -43,6 +46,8 @@ public class Command {
                     .build();
             LiteralCommandNode<FabricClientCommandSource> clearTaskNode = literal("clearTask").executes(context -> {
                 Task.TASKS.clear();
+                Consts.itemCacheMap.clear();
+                PlayerLookHelper.reset();
                 return 1;
             }).build();
 

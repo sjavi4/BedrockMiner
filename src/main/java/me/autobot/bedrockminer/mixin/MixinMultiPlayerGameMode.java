@@ -2,6 +2,7 @@ package me.autobot.bedrockminer.mixin;
 
 import me.autobot.bedrockminer.Setting;
 import me.autobot.bedrockminer.helper.ItemCache;
+import me.autobot.bedrockminer.helper.PlayerLookHelper;
 import me.autobot.bedrockminer.task.Task;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.world.item.Items;
@@ -19,6 +20,7 @@ public class MixinMultiPlayerGameMode {
     public void onTick(CallbackInfo ci) {
         if (!Setting.ENABLE) {
             Task.TASKS.clear();
+            itemCacheMap.clear();
         }
         Task.TASKS.values().removeIf(task -> task.remove);
         if (!Task.TASKS.isEmpty()) {
@@ -56,6 +58,8 @@ public class MixinMultiPlayerGameMode {
             }
             if (invalid) {
                 Task.TASKS.clear();
+                itemCacheMap.clear();
+                PlayerLookHelper.reset();
                 sendMsg("Fail to Cache Inventory", true);
                 return;
             }
